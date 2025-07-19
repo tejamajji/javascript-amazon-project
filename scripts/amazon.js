@@ -92,10 +92,21 @@ document.querySelectorAll('.add-to-cart-button').forEach((button) => {
 
       });
     }
+  let totalQuant=0;
+  cart.forEach((item)=>
+  {
+      totalQuant+=item.quantity;
+  }) ; 
   console.log(cart);
-      
-  })
+  console.log(totalQuant);
 
-})
+  document.querySelector('.js-cart-quantity').innerHTML=totalQuant;
+      
+  });
+
+});
+
+
+
 
 
