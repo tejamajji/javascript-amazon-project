@@ -1,5 +1,6 @@
-import {cart} from '../data/cart.js';
-
+import { products } from '../data/products.js';
+import {cart , addToCart} from '../data/cart.js';
+import { formatCurrency } from './utils/money.js';
 
 let productsHtml=``;
 
@@ -26,7 +27,7 @@ products.forEach((product)=>{
           </div>
 
           <div class="product-price">
-       ${(product.priceCents/100).toFixed(2)}
+       ${formatCurrency(product.priceCents)}
           </div>
 
           <div class="product-quantity-container">
@@ -65,48 +66,8 @@ products.forEach((product)=>{
 
 });
 
-
-document.querySelector('.js-products-grid').innerHTML=productsHtml;
-
-document.querySelectorAll('.add-to-cart-button').forEach((button) => {
-
-  button.addEventListener('click',()=>
-  {   
-      const productId=button.dataset.productId;
-      const select = document.querySelector(`.product-quantity-container select[data-product-id="${productId}"]`);
-      const selectedQuantity = parseInt(select.value,10);
-      const added = document.querySelector(`.added-to-cart[data-product-id="${productId}"]`);
-
-      added.classList.add("show");
-
-      setTimeout(()=>
-      {
-        added.classList.remove("show");
-
-      },5000);
-
-
-      let matchingItem;
-      cart.forEach((item)=>
-      {
-        if (productId === item.productId)
-        {
-            matchingItem=item;
-        }
-      });
-
-      if (matchingItem)
-      {
-        matchingItem.quantity+=selectedQuantity;
-      }
-      else {
-      cart.push({
-
-        productId:productId,
-        quantity:selectedQuantity
-
-      });
-    }
+function updateCartQuantity() {
+  
   let totalQuant=0;
   cart.forEach((item)=>
   {
@@ -116,6 +77,19 @@ document.querySelectorAll('.add-to-cart-button').forEach((button) => {
   console.log(totalQuant);
 
   document.querySelector('.js-cart-quantity').innerHTML=totalQuant;
+  
+}
+
+
+document.querySelector('.js-products-grid').innerHTML=productsHtml;
+
+document.querySelectorAll('.add-to-cart-button').forEach((button) => {
+
+  button.addEventListener('click',()=>
+  {   
+      const productId=button.dataset.productId;
+      addToCart(productId);
+      updateCartQuantity();
       
   });
 
